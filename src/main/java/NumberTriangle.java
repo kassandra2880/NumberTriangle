@@ -109,8 +109,8 @@ public class NumberTriangle {
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
-
         // TODO define any variables that you want to use to store things
+        NumberTriangle[] prevRoots = null;
 
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
@@ -118,13 +118,29 @@ public class NumberTriangle {
 
         String line = br.readLine();
         while (line != null) {
-
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
-
             // TODO process the line
+            String[] treeRow = line.split(" ");
 
-            //read the next line
+            NumberTriangle[] currRoots = new NumberTriangle[treeRow.length];
+            currRoots[0] = new NumberTriangle(Integer.parseInt(treeRow[0]));
+
+            if (prevRoots == null) {
+                top = currRoots[0];
+            } else {
+                for (int i = 1; i < treeRow.length; i++) {
+                    NumberTriangle prevRoot = prevRoots[i - 1];
+
+                    NumberTriangle left = currRoots[i - 1];
+                    prevRoot.setLeft(left);
+
+                    NumberTriangle right = new NumberTriangle(Integer.parseInt(treeRow[i]));
+                    prevRoot.setRight(right);
+                    currRoots[i] = right;
+                }
+            }
+
+            prevRoots = currRoots;
+            // read the next line
             line = br.readLine();
         }
         br.close();
